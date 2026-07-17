@@ -1,8 +1,41 @@
 :root {
-  --font-sans: system-ui, sans-serif;
+  --font-sans: 'Nunito Sans', system-ui, sans-serif;
+
+  /* Brand palette (Top Tier Homes) */
+  --color-bg: #faf8f5;
+  --color-text: #404041;
+  --color-muted: #6e6660;
+  --color-brown: #663a2a;
+  --color-gold: #f7b334;
+  --color-navy: #0d2240;
+  --color-navy-text: #c9d2e0;
+  --color-border: #ede7df;
+  --color-section: #f1ece4;
+  --color-footer: #33342f;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   font-family: var(--font-sans);
   margin: 0;
+  color: var(--color-text);
+  background: var(--color-bg);
+  overflow-x: hidden;
+}
+
+a {
+  color: var(--color-brown);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-gold);
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-text);
 }
