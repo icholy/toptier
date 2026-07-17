@@ -1,18 +1,840 @@
 ---
 import Base from '../layouts/Base.astro';
+
+const base = import.meta.env.BASE_URL;
+
+// Content / contact details
+const email = 'mike@toptierhomes.ca';
+const mailto = `mailto:${email}?subject=${encodeURIComponent('Renovation Quote - Top Tier Homes')}`;
+const phone = '905-964-5128';
+const tel = 'tel:+19059645128';
+const years = '20+';
+const showGallery = true;
+
+const services = [
+  {
+    title: 'Kitchen Renovations',
+    body: 'Cabinets, counters, and smart layouts that make the heart of your home work harder.',
+  },
+  {
+    title: 'Full Home Remodels',
+    body: 'Whole-home transformations managed from demo day to the final walkthrough.',
+  },
+  {
+    title: 'Tiling & Flooring',
+    body: 'Precise tile, stone, and hardwood with a level, lasting finish.',
+  },
+  {
+    title: 'Basement Finishing',
+    body: 'Turn unused square footage into living space, suites, or rec rooms.',
+  },
+  {
+    title: 'Custom Carpentry',
+    body: 'Built-ins, trim, and finish carpentry done by hand, done right.',
+  },
+];
+
+const gallery = [
+  { id: 'g1', label: 'Feature bathroom', feature: true },
+  { id: 'g2', label: 'Tile detail', feature: false },
+  { id: 'g3', label: 'Vanity', feature: false },
+  { id: 'g4', label: 'Walk-in shower', feature: false },
+  { id: 'g5', label: 'Full reno', feature: false },
+];
 ---
 
-<Base title="TOP TIER">
+<Base title="Top Tier Homes — Bathroom Renovations in Niagara">
+  <!-- ===== NAV ===== -->
+  <header class="nav">
+    <div class="nav__inner container">
+      <img class="nav__logo" src={`${base}/logo.png`} alt="Top Tier Homes" />
+      <nav class="nav__links">
+        <a href="#services" class="nav__link">Services</a>
+        <a href="#work" class="nav__link">Our Work</a>
+        <a href="#about" class="nav__link">About</a>
+        <a href={mailto} class="btn btn--gold">Get a Quote</a>
+      </nav>
+    </div>
+  </header>
+
   <main>
-    <h1>TOP TIER</h1>
+    <!-- ===== HERO ===== -->
+    <section class="hero container">
+      <div class="hero__copy">
+        <p class="eyebrow"><span class="eyebrow__tick"></span>Bathroom Renovation Specialists</p>
+        <h1 class="hero__title">Renovations done right the first time.</h1>
+        <p class="hero__lede">
+          Top Tier Homes builds craftsman-quality bathrooms and renovations across the
+          Niagara Region — clean job sites, honest pricing, and finishes that last.
+        </p>
+        <div class="hero__actions">
+          <a href={mailto} class="btn btn--gold btn--lg">Email Mike for a Quote</a>
+          <a href={tel} class="link-phone">{phone}</a>
+        </div>
+      </div>
+      <div class="hero__media">
+        <div class="photo photo--hero">
+          <span class="photo__label">Finished bathroom — wide shot</span>
+        </div>
+        <div class="hero__badge">
+          <div class="hero__badge-num">{years}</div>
+          <div class="hero__badge-text">years in Niagara</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TRUST BAR ===== -->
+    <section class="trust">
+      <div class="trust__inner container">
+        <div class="trust__item">
+          <div class="trust__stat">{years} Years</div>
+          <div class="trust__label">Renovating homes across the Niagara Region</div>
+        </div>
+        <div class="trust__item">
+          <div class="trust__stat">Licensed</div>
+          <div class="trust__label">Fully licensed &amp; insured contractor</div>
+        </div>
+        <div class="trust__item">
+          <div class="trust__stat">Craftsmanship</div>
+          <div class="trust__label">Meticulous, hands-on work on every job</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SERVICES ===== -->
+    <section id="services" class="services container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow"><span class="eyebrow__tick"></span>What We Do</p>
+          <h2 class="section-title">Built for every room.</h2>
+        </div>
+        <p class="section-head__note">
+          Bathrooms are our specialty — but Mike and the crew handle the whole home,
+          start to finish.
+        </p>
+      </div>
+
+      <div class="services__grid">
+        <article class="card card--feature">
+          <span class="card__slash"></span>
+          <p class="card__kicker">Our Specialty</p>
+          <h3 class="card__title">Bathroom Renovations</h3>
+          <p class="card__body">
+            Full gut renos, walk-in showers, soaker tubs, custom tile, vanities and
+            fixtures — designed and built end to end for a bathroom you'll love for years.
+          </p>
+        </article>
+        {
+          services.map((service) => (
+            <article class="card">
+              <h3 class="card__title card__title--sm">{service.title}</h3>
+              <p class="card__body card__body--muted">{service.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- ===== GALLERY ===== -->
+    {
+      showGallery && (
+        <section id="work" class="work">
+          <div class="container">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">
+                  <span class="eyebrow__tick" />Our Work
+                </p>
+                <h2 class="section-title">Recent projects.</h2>
+              </div>
+              <span class="section-head__note">Finished work from around Niagara</span>
+            </div>
+            <div class="work__grid">
+              {gallery.map((item) => (
+                <div class:list={['photo', 'work__cell', { 'work__cell--feature': item.feature }]}>
+                  <span class="photo__label">{item.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    <!-- ===== ABOUT ===== -->
+    <section id="about" class="about container">
+      <div class="about__media">
+        <div class="photo photo--about">
+          <span class="photo__label">Mike on site</span>
+        </div>
+        <span class="about__frame"></span>
+      </div>
+      <div>
+        <p class="eyebrow"><span class="eyebrow__tick"></span>The Person Behind the Work</p>
+        <h2 class="section-title">Meet Mike Oligradsky</h2>
+        <p class="about__body">
+          For over two decades, Mike has renovated homes across the Niagara Region with
+          one simple promise: do it once, do it right. Every project gets his hands-on
+          attention — from the first measurement to the final wipe-down.
+        </p>
+        <p class="about__body">
+          Licensed, insured, and known for leaving job sites cleaner than he found them.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section class="cta">
+      <span class="cta__slash"></span>
+      <div class="cta__inner container">
+        <img class="cta__logo" src={`${base}/logo-white.png`} alt="Top Tier Homes" />
+        <h2 class="cta__title">Let's talk about your reno.</h2>
+        <p class="cta__lede">
+          Tell Mike what you're planning and he'll get back to you with a no-pressure quote.
+        </p>
+        <div class="cta__actions">
+          <a href={mailto} class="btn btn--gold btn--lg">Email Mike</a>
+          <a href={tel} class="btn btn--ghost btn--lg">{phone}</a>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer__top container">
+      <img class="footer__logo" src={`${base}/logo-white.png`} alt="Top Tier Homes" />
+      <div class="footer__contact">
+        <a href={mailto} class="footer__link">{email}</a>
+        <a href={tel} class="footer__link">{phone}</a>
+        <span class="footer__muted">Niagara Region</span>
+      </div>
+    </div>
+    <div class="footer__bar">
+      <div class="footer__bar-inner container">
+        <span>© 2026 Top Tier Homes · Licensed &amp; Insured</span>
+        <span>Renovations · Bathrooms · Kitchens · Basements</span>
+      </div>
+    </div>
+  </footer>
 </Base>
 
 <style>
-  main {
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  /* ---------- Shared bits ---------- */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 20px;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-brown);
+    font-weight: 800;
+  }
+
+  .eyebrow__tick {
+    width: 30px;
+    height: 4px;
+    background: var(--color-gold);
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-weight: 900;
+    font-size: 44px;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: var(--color-text);
+  }
+
+  .btn {
+    display: inline-block;
+    border-radius: 4px;
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    padding: 11px 22px;
+    transition:
+      background 0.15s ease,
+      color 0.15s ease,
+      border-color 0.15s ease;
+  }
+
+  .btn--lg {
+    font-size: 17px;
+    padding: 16px 30px;
+  }
+
+  .btn--gold {
+    background: var(--color-gold);
+    color: var(--color-text);
+  }
+
+  .btn--gold:hover {
+    background: var(--color-text);
+    color: var(--color-bg);
+  }
+
+  .btn--ghost {
+    color: var(--color-bg);
+    border: 2px solid rgba(255, 255, 255, 0.35);
+  }
+
+  .btn--ghost:hover {
+    border-color: var(--color-gold);
+    color: var(--color-gold);
+  }
+
+  .link-phone {
+    color: var(--color-text);
+    font-weight: 800;
+    font-size: 17px;
+    border-bottom: 3px solid var(--color-gold);
+    padding-bottom: 3px;
+  }
+
+  .link-phone:hover {
+    color: var(--color-brown);
+  }
+
+  .section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    margin-bottom: 44px;
+    flex-wrap: wrap;
+  }
+
+  .section-head__note {
+    max-width: 340px;
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--color-muted);
+    margin: 0;
+  }
+
+  /* ---------- Photo placeholders ---------- */
+  .photo {
+    position: relative;
+    background:
+      linear-gradient(135deg, #efe7de 0%, #e4d8cc 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
+    text-align: center;
+    padding: 16px;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+
+  .photo__label {
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #9a8a7b;
+  }
+
+  /* ---------- Nav ---------- */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 248, 245, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .nav__logo {
+    height: 60px;
+    width: auto;
+    display: block;
+  }
+
+  .nav__links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .nav__link {
+    color: var(--color-text);
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.02em;
+  }
+
+  .nav__link:hover {
+    color: var(--color-gold);
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.02fr 0.98fr;
+    gap: 56px;
+    align-items: center;
+    padding-top: 84px;
+    padding-bottom: 76px;
+  }
+
+  .hero__title {
+    font-weight: 900;
+    font-size: 60px;
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    margin: 0 0 24px;
+    color: var(--color-text);
+    text-wrap: balance;
+  }
+
+  .hero__lede {
+    font-size: 19px;
+    line-height: 1.6;
+    color: var(--color-muted);
+    margin: 0 0 34px;
+    max-width: 480px;
+  }
+
+  .hero__actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .hero__media {
+    position: relative;
+    height: 540px;
+  }
+
+  .photo--hero {
+    position: absolute;
+    inset: 0;
+    border-radius: 6px;
+    box-shadow: 0 30px 60px -30px rgba(64, 64, 65, 0.4);
+  }
+
+  .hero__badge {
+    position: absolute;
+    bottom: -22px;
+    left: -22px;
+    background: var(--color-navy);
+    color: var(--color-bg);
+    padding: 18px 26px;
+    border-radius: 6px;
+    box-shadow: 0 20px 40px -20px rgba(13, 34, 64, 0.6);
+  }
+
+  .hero__badge-num {
+    font-weight: 900;
+    font-size: 26px;
+    color: var(--color-gold);
+    line-height: 1;
+  }
+
+  .hero__badge-text {
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    margin-top: 5px;
+    color: var(--color-navy-text);
+  }
+
+  /* ---------- Trust bar ---------- */
+  .trust {
+    background: var(--color-navy);
+  }
+
+  .trust__inner {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .trust__item {
+    padding: 30px 32px;
+  }
+
+  .trust__item:not(:last-child) {
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .trust__stat {
+    font-weight: 900;
+    font-size: 30px;
+    color: var(--color-gold);
+    line-height: 1;
+  }
+
+  .trust__label {
+    font-size: 15px;
+    color: var(--color-navy-text);
+    margin-top: 8px;
+  }
+
+  /* ---------- Services ---------- */
+  .services {
+    padding-top: 88px;
+    padding-bottom: 88px;
+  }
+
+  .services__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 20px;
+  }
+
+  .card {
+    background: #ffffff;
+    border: 1px solid var(--color-border);
+    padding: 38px;
+    border-radius: 8px;
+  }
+
+  .card--feature {
+    background: var(--color-brown);
+    color: var(--color-bg);
+    border: none;
+    position: relative;
+    overflow: hidden;
+    /* span two rows so the feature card anchors the grid */
+    grid-row: span 2;
+  }
+
+  .card__slash {
+    position: absolute;
+    top: 0;
+    right: 44px;
+    width: 8px;
+    height: 90px;
+    background: var(--color-gold);
+    transform: skewX(-20deg);
+  }
+
+  .card__kicker {
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--color-gold);
+    margin: 0;
+  }
+
+  .card__title {
+    font-weight: 900;
+    font-size: 28px;
+    margin: 14px 0 12px;
+  }
+
+  .card__title--sm {
+    font-weight: 800;
+    font-size: 22px;
+    margin: 0 0 12px;
+    color: var(--color-text);
+  }
+
+  .card__body {
+    font-size: 15.5px;
+    line-height: 1.6;
+    margin: 0;
+    color: #ead9cf;
+  }
+
+  .card__body--muted {
+    font-size: 15px;
+    color: var(--color-muted);
+  }
+
+  /* ---------- Gallery ---------- */
+  .work {
+    background: var(--color-section);
+  }
+
+  .work .container {
+    padding-top: 84px;
+    padding-bottom: 84px;
+  }
+
+  .work__grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 230px 230px;
+    gap: 16px;
+  }
+
+  .work__cell {
+    border-radius: 8px;
+  }
+
+  .work__cell--feature {
+    grid-row: span 2;
+  }
+
+  /* ---------- About ---------- */
+  .about {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 56px;
+    align-items: center;
+    padding-top: 90px;
+    padding-bottom: 90px;
+  }
+
+  .about__media {
+    position: relative;
+    height: 440px;
+  }
+
+  .photo--about {
+    position: absolute;
+    inset: 0;
+    border-radius: 6px;
+    box-shadow: 0 30px 60px -30px rgba(64, 64, 65, 0.4);
+  }
+
+  .about__frame {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    width: 90px;
+    height: 90px;
+    border: 4px solid var(--color-gold);
+    border-radius: 6px;
+    z-index: -1;
+  }
+
+  .about__body {
+    font-size: 18px;
+    line-height: 1.65;
+    color: var(--color-muted);
+    margin: 0 0 16px;
+  }
+
+  .about__body:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ---------- CTA ---------- */
+  .cta {
+    background: var(--color-navy);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta__slash {
+    position: absolute;
+    top: -60px;
+    right: 90px;
+    width: 14px;
+    height: 260px;
+    background: var(--color-gold);
+    transform: skewX(-20deg);
+    opacity: 0.9;
+  }
+
+  .cta__inner {
+    padding-top: 84px;
+    padding-bottom: 84px;
+    text-align: center;
+    position: relative;
+  }
+
+  .cta__logo {
+    height: 96px;
+    width: auto;
+    margin: 0 auto 28px;
+    display: block;
+  }
+
+  .cta__title {
+    font-weight: 900;
+    font-size: 46px;
+    letter-spacing: -0.02em;
+    margin: 0 0 16px;
+    color: var(--color-bg);
+  }
+
+  .cta__lede {
+    font-size: 19px;
+    line-height: 1.6;
+    color: var(--color-navy-text);
+    max-width: 540px;
+    margin: 0 auto 34px;
+  }
+
+  .cta__actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  /* ---------- Footer ---------- */
+  .footer {
+    background: var(--color-footer);
+    color: #b7b2ac;
+  }
+
+  .footer__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding-top: 34px;
+    padding-bottom: 34px;
+    flex-wrap: wrap;
+  }
+
+  .footer__logo {
+    height: 52px;
+    width: auto;
+    display: block;
+  }
+
+  .footer__contact {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+    font-size: 15px;
+    flex-wrap: wrap;
+  }
+
+  .footer__link {
+    color: var(--color-border);
+    font-weight: 600;
+  }
+
+  .footer__link:hover {
+    color: var(--color-gold);
+  }
+
+  .footer__muted {
+    color: #8b867f;
+  }
+
+  .footer__bar {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .footer__bar-inner {
+    padding-top: 18px;
+    padding-bottom: 18px;
+    font-size: 13px;
+    color: #8b867f;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px) {
+    .hero {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      padding-top: 56px;
+      padding-bottom: 56px;
+    }
+
+    .hero__title {
+      font-size: 46px;
+    }
+
+    .hero__media {
+      height: 380px;
+    }
+
+    .services__grid,
+    .work__grid {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: none;
+    }
+
+    .card--feature,
+    .work__cell--feature {
+      grid-column: span 2;
+      grid-row: auto;
+    }
+
+    .work__cell {
+      min-height: 220px;
+    }
+
+    .about {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      padding-top: 64px;
+      padding-bottom: 64px;
+    }
+
+    .section-title {
+      font-size: 34px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .container {
+      padding-left: 22px;
+      padding-right: 22px;
+    }
+
+    .nav__links {
+      gap: 16px;
+    }
+
+    .nav__link {
+      display: none;
+    }
+
+    .hero__title {
+      font-size: 38px;
+    }
+
+    .trust__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .trust__item:not(:last-child) {
+      border-right: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .services__grid,
+    .work__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .card--feature,
+    .work__cell--feature {
+      grid-column: auto;
+    }
+
+    .section-head {
+      margin-bottom: 32px;
+    }
+
+    .cta__title {
+      font-size: 34px;
+    }
   }
 </style>
