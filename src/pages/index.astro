@@ -35,12 +35,55 @@ const services = [
   },
 ];
 
-const gallery = [
-  { id: 'g1', label: 'Feature bathroom', feature: true },
-  { id: 'g2', label: 'Tile detail', feature: false },
-  { id: 'g3', label: 'Vanity', feature: false },
-  { id: 'g4', label: 'Walk-in shower', feature: false },
-  { id: 'g5', label: 'Full reno', feature: false },
+// Gallery groups. Each group renders four photos into the same grid:
+// photos[0] is the large feature cell (roughly square), photos[1] is the
+// tall portrait cell, photos[2] and photos[3] are the two small cells.
+// `position` is an optional object-position override for the crop.
+const work = [
+  {
+    id: 'bathrooms',
+    title: 'Bathrooms',
+    note: 'Our specialty. Walk-in showers, soaker tubs, and custom tile, built end to end.',
+    photos: [
+      { src: 'bath-tile-shower', alt: 'Large walk-in shower in wood-look tile with two niches and a hex tile floor' },
+      { src: 'bath-marble-shower', alt: 'Glass shower with marble-look tile and black fixtures' },
+      { src: 'bath-subway-tub', alt: 'Tub surround in white subway tile with a black rain shower', position: 'center 55%' },
+      { src: 'bath-grey-shower', alt: 'Glass shower with grey wood-look tile' },
+    ],
+  },
+  {
+    id: 'kitchens',
+    title: 'Kitchens',
+    note: 'Cabinets, counters, and layouts that make the room work.',
+    photos: [
+      { src: 'kitchen-grey-island', alt: 'Grey shaker kitchen with a large island and stainless appliances' },
+      { src: 'kitchen-oak', alt: 'Light oak kitchen with stainless range and fridge' },
+      { src: 'kitchen-grey-nook', alt: 'Grey kitchen cabinets beside a window and doorway' },
+      { src: 'kitchen-white', alt: 'White kitchen with tile backsplash and stainless range' },
+    ],
+  },
+  {
+    id: 'builds',
+    title: 'Full Builds & Additions',
+    note: 'Big projects handled start to finish, from framing and structure through to the exterior.',
+    photos: [
+      { src: 'build-exterior', alt: 'Two-storey house wrapped and ready for siding' },
+      { src: 'build-timber-loft', alt: 'Timber frame loft under construction with arched windows' },
+      { src: 'build-crane', alt: 'Crane lifting roof framing onto a house under construction' },
+      { src: 'build-framing', alt: 'Interior stud framing of a new build' },
+    ],
+  },
+  {
+    id: 'finish',
+    title: 'Finish Work',
+    note: 'Decks, panelling, and flooring. The details that finish a home.',
+    photos: [
+      { src: 'home-deck', alt: 'Cedar deck built around an above-ground pool', position: 'center 60%' },
+      { src: 'home-hallway', alt: 'Hallway with white wall panelling, hardwood floor, and chandelier' },
+      { src: 'home-deck-stairs', alt: 'Cedar deck gate and stairs leading down to the yard' },
+      { src: 'home-deck-rail', alt: 'Cedar deck railing running alongside the pool' },
+    ],
+  },
 ];
 ---
 
@@ -75,7 +118,7 @@ const gallery = [
       </div>
       <div class="hero__media">
         <div class="photo photo--hero">
-          <img class="photo__img" src={`${base}/hero.webp`} alt="Finished bathroom renovation, wide shot" />
+          <img class="photo__img" src={`${base}/hero.webp`} alt="Finished kitchen renovation with white cabinets and a dark wood hutch" />
         </div>
         <div class="hero__badge">
           <div class="hero__badge-num">{years}</div>
@@ -158,13 +201,28 @@ const gallery = [
                 <span class="ig-pill__handle">@top_tier_homes</span>
               </a>
             </div>
-            <div class="work__grid">
-              {gallery.map((item) => (
-                <div class:list={['photo', 'work__cell', { 'work__cell--feature': item.feature }]}>
-                  <img class="photo__img" src={`${base}/${item.id}.webp`} alt={item.label} />
+            {work.map((group) => (
+              <div class="work__group" id={`work-${group.id}`}>
+                <div class="work__group-head">
+                  <h3 class="work__group-title">{group.title}</h3>
+                  <p class="work__group-note">{group.note}</p>
                 </div>
-              ))}
-            </div>
+                <div class="work__grid">
+                  {group.photos.map((photo) => (
+                    <div class="photo work__cell">
+                      <img
+                        class="photo__img"
+                        src={`${base}/${photo.src}.webp`}
+                        alt={photo.alt}
+                        loading="lazy"
+                        decoding="async"
+                        style={photo.position ? `object-position: ${photo.position}` : undefined}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </section>
       )
@@ -597,10 +655,39 @@ const gallery = [
     padding-bottom: 84px;
   }
 
+  .work__group + .work__group {
+    margin-top: 56px;
+  }
+
+  .work__group-head {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+
+  .work__group-title {
+    font-weight: 900;
+    font-size: 22px;
+    margin: 0;
+    color: var(--color-text);
+    padding-left: 14px;
+    border-left: 4px solid var(--color-gold);
+    line-height: 1.1;
+  }
+
+  .work__group-note {
+    margin: 0;
+    font-size: 15px;
+    color: var(--color-muted);
+  }
+
+  /* Four cells per group: a 2x2 feature, a tall cell, and two small cells. */
   .work__grid {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    grid-template-rows: 230px 230px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 240px 240px;
     gap: 16px;
   }
 
@@ -608,7 +695,12 @@ const gallery = [
     border-radius: 8px;
   }
 
-  .work__cell--feature {
+  .work__cell:nth-child(1) {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .work__cell:nth-child(2) {
     grid-row: span 2;
   }
 
@@ -832,20 +924,29 @@ const gallery = [
       height: 380px;
     }
 
-    .services__grid,
-    .work__grid {
+    .services__grid {
       grid-template-columns: 1fr 1fr;
-      grid-template-rows: none;
     }
 
-    .card--feature,
-    .work__cell--feature {
+    .card--feature {
       grid-column: span 2;
       grid-row: auto;
     }
 
-    .work__cell {
-      min-height: 220px;
+    .work__grid {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: none;
+      grid-auto-rows: 210px;
+    }
+
+    .work__cell:nth-child(1),
+    .work__cell:nth-child(2) {
+      grid-column: auto;
+      grid-row: auto;
+    }
+
+    .work__group + .work__group {
+      margin-top: 44px;
     }
 
     .about {
@@ -887,14 +988,21 @@ const gallery = [
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .services__grid,
-    .work__grid {
+    .services__grid {
       grid-template-columns: 1fr;
     }
 
-    .card--feature,
-    .work__cell--feature {
+    .card--feature {
       grid-column: auto;
+    }
+
+    .work__grid {
+      grid-auto-rows: 150px;
+      gap: 10px;
+    }
+
+    .work__group-title {
+      font-size: 20px;
     }
 
     .section-head {
