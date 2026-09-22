@@ -1,4 +1,6 @@
 ---
+import path from 'node:path';
+import sharp from 'sharp';
 import Base from '../layouts/Base.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -39,7 +41,9 @@ const services = [
 // photos[0] is the large feature cell (roughly square), photos[1] is the
 // tall portrait cell, photos[2] and photos[3] are the two small cells.
 // `position` is an optional object-position override for the crop.
-const work = [
+// Files live in public/ as <src>.webp; the lightbox needs their pixel
+// size, which is read at build time below.
+const groups = [
   {
     id: 'bathrooms',
     title: 'Bathrooms',
@@ -85,6 +89,21 @@ const work = [
     ],
   },
 ];
+
+async function withSize<T extends { src: string }>(photo: T) {
+  const file = path.join(process.cwd(), 'public', `${photo.src}.webp`);
+  const { width = 0, height = 0 } = await sharp(file).metadata();
+  return { ...photo, width, height };
+}
+
+const work = await Promise.all(
+  groups.map(async (group) => ({ ...group, photos: await Promise.all(group.photos.map(withSize)) })),
+);
+
+const hero = await withSize({
+  src: 'hero',
+  alt: 'Finished kitchen renovation with white cabinets and a dark wood hutch',
+});
 ---
 
 <Base title="Top Tier Homes — Bathroom Renovations in Niagara">
@@ -118,7 +137,14 @@ const work = [
       </div>
       <div class="hero__media">
         <div class="photo photo--hero">
-          <img class="photo__img" src={`${base}/hero.webp`} alt="Finished kitchen renovation with white cabinets and a dark wood hutch" />
+          <a
+            class="photo__link"
+            href={`${base}/${hero.src}.webp`}
+            data-pswp-width={hero.width}
+            data-pswp-height={hero.height}
+          >
+            <img class="photo__img" src={`${base}/${hero.src}.webp`} alt={hero.alt} />
+          </a>
         </div>
         <div class="hero__badge">
           <div class="hero__badge-num">{years}</div>
@@ -210,14 +236,21 @@ const work = [
                 <div class="work__grid">
                   {group.photos.map((photo) => (
                     <div class="photo work__cell">
-                      <img
-                        class="photo__img"
-                        src={`${base}/${photo.src}.webp`}
-                        alt={photo.alt}
-                        loading="lazy"
-                        decoding="async"
-                        style={photo.position ? `object-position: ${photo.position}` : undefined}
-                      />
+                      <a
+                        class="photo__link"
+                        href={`${base}/${photo.src}.webp`}
+                        data-pswp-width={photo.width}
+                        data-pswp-height={photo.height}
+                      >
+                        <img
+                          class="photo__img"
+                          src={`${base}/${photo.src}.webp`}
+                          alt={photo.alt}
+                          loading="lazy"
+                          decoding="async"
+                          style={photo.position ? `object-position: ${photo.position}` : undefined}
+                        />
+                      </a>
                     </div>
                   ))}
                 </div>
@@ -266,6 +299,37 @@ const work = [
       </div>
     </section>
   </main>
+
+  <script>
+    import PhotoSwipeLightbox from 'photoswipe/lightbox';
+    import 'photoswipe/style.css';
+
+    // One gallery for the hero photo and every project photo, in page order.
+    const lightbox = new PhotoSwipeLightbox({
+      gallery: 'main',
+      children: 'a.photo__link',
+      bgOpacity: 1,
+      pswpModule: () => import('photoswipe'),
+    });
+
+    // Show each photo's alt text as a caption under it.
+    lightbox.on('uiRegister', () => {
+      lightbox.pswp?.ui?.registerElement({
+        name: 'caption',
+        order: 9,
+        isButton: false,
+        appendTo: 'root',
+        onInit: (el, pswp) => {
+          pswp.on('change', () => {
+            const link = pswp.currSlide?.data.element;
+            el.textContent = link?.querySelector('img')?.getAttribute('alt') ?? '';
+          });
+        },
+      });
+    });
+
+    lightbox.init();
+  </script>
 
   <!-- ===== FOOTER ===== -->
   <footer class="footer">
@@ -905,6 +969,48 @@ const work = [
     justify-content: space-between;
     gap: 16px;
     flex-wrap: wrap;
+  }
+
+  /* ---------- Photo links + lightbox ---------- */
+  .photo__link {
+    position: absolute;
+    inset: 0;
+    display: block;
+    cursor: zoom-in;
+  }
+
+  .photo__link .photo__img {
+    transition: transform 0.25s ease;
+  }
+
+  .photo__link:hover .photo__img,
+  .photo__link:focus-visible .photo__img {
+    transform: scale(1.03);
+  }
+
+  .photo__link:focus-visible {
+    outline: 3px solid var(--color-gold);
+    outline-offset: -3px;
+  }
+
+  /* PhotoSwipe builds its DOM at runtime, so these must be global. */
+  :global(.pswp) {
+    --pswp-bg: var(--color-navy);
+  }
+
+  :global(.pswp__caption) {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 14px 24px;
+    text-align: center;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    color: var(--color-navy-text);
+    background: linear-gradient(to top, rgba(13, 34, 64, 0.85), rgba(13, 34, 64, 0));
+    pointer-events: none;
   }
 
   /* ---------- Responsive ---------- */

@@ -13,6 +13,10 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^7.1.1"
+    "astro": "^7.1.1",
+    "photoswipe": "^5.4.4"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.4"
   }
 }
